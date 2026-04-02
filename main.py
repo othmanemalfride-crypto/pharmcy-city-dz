@@ -5,7 +5,7 @@ import google.generativeai as genai
 API_KEY ="AIzaSyCmz5zNxmQC-wjTREXNLZmfFMeH4zBsgAQ"
 
 genai.configure(api_key=API_KEY)
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel('models/gemini-1.5-flash')
 
 # إعدادات واجهة المستخدم
 st.set_page_config(page_title="فارماسي سيتي-دي زد", page_icon="💊")
