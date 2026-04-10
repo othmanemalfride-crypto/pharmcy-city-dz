@@ -5,7 +5,8 @@ import google.generativeai as genai
 API_KEY = "AIzaSyCmz5zNxmQC-wjTREXNLZmfFMeH4zBsgAQ" 
 
 genai.configure(api_key=API_KEY)
-model = genai.GenerativeModel('models/gemini-1.5-flash')
+# التعديل هنا لضمان عمل الموديل بدون خطأ 404
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 # --- UI SETTINGS ---
 st.set_page_config(page_title="MedResearch AI", page_icon="🔬", layout="wide")
