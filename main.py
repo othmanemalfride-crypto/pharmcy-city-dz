@@ -1,27 +1,34 @@
 import streamlit as st
-import google.generativeai as genai
+import requests
 
-# حط المفتاح تاعك هنا
-API_KEY = "AIzaSyCmz5zNxmQC-wjTREXNLZmfFMeH4zBsgAQ" 
-
-genai.configure(api_key=API_KEY)
-
-# طريقة ذكية لتفادي خطأ 404
-try:
-    model = genai.GenerativeModel('gemini-1.5-flash')
-except:
-    model = genai.GenerativeModel('gemini-pro') # نسخة احتياطية
+# --- الإعدادات ---
+API_KEY = "AIzaSyCmz5zNxmQC-wjTREXNLZmfFMeH4zBsgAQ"
+URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={API_KEY}"
 
 st.set_page_config(page_title="MedResearch AI", page_icon="🔬")
+st.title("🔬 MedResearch AI Assistant")
 
-st.title("🔬 MedResearch AI")
-user_input = st.text_input("Ask about medical research:")
+user_input = st.text_input("Enter your medical research topic:")
 
 if st.button("Analyze"):
     if user_input:
+        # تجهيز البيانات للإرسال
+        payload = {
+            "contents": [{
+                "parts": [{"text": f"You are a medical researcher. Analyze: {user_input}"}]
+            }]
+        }
+        
         try:
-            # نحدد الإصدار v1beta يدوياً في الطلب
-            response = model.generate_content(user_input)
-            st.write(response.text)
+            response = requests.post(URL, json=payload)
+            result = response.json()
+            
+            # عرض النتيجة
+            if "candidates" in result:
+                answer = result["candidates"][0]["content"]["parts"][0]["text"]
+                st.markdown(answer)
+                st.success("Done!")
+            else:
+                st.error(f"API Error: {result}")
         except Exception as e:
-            st.error(f"Error details: {e}")
+            st.error(f"Connection Error: {e}")
